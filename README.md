@@ -8,11 +8,14 @@ Here are some scripts that would help.
 
 Add those lines before `seq=...` in `openstreetmap-tiles-update-expire` script:
 
-    MIN_DISK_SPACE_MB=50000
-    if (( `stat -f --format="%a*%S" $BASE_DIR` < 1024*1024*$MIN_DISK_SPACE_MB )); then
-        m_info "there is less than $MIN_DISK_SPACE_MB MB left"
-        exit 4
-    fi
+```bash
+MIN_DISK_SPACE_MB=50000
+
+if (( `stat -f --format="%a*%S" $BASE_DIR` < 1024*1024*$MIN_DISK_SPACE_MB )); then
+    m_info "there is less than $MIN_DISK_SPACE_MB MB left"
+    exit 4
+fi
+```
 
 *Note: it does not work for some unknown reason. Investigate.*
 
@@ -26,10 +29,12 @@ ways could be filtered more effectively.
 To include the script into mod_tile update cycle, add those lines to
 `openstreetmap-tiles-update-expire` script, between osmosis and osm2pgsql:
 
-    m_ok "filtering diff"
-    if ! /path/to/trim_osc.py -d gis -p /path/to/region.poly -z $CHANGE_FILE $CHANGE_FILE 1>&2 2>> "$RUNLOG"; then
-	m_error "Trim_osc error"
-    fi
+```bash
+m_ok "filtering diff"
+if ! /path/to/trim_osc.py -d gis -p /path/to/region.poly -z $CHANGE_FILE $CHANGE_FILE 1>&2 2>> "$RUNLOG"; then
+    m_error "Trim_osc error"
+fi
+```
 
 On a 16.5 GB database without this script planet diffs amounted to
 600-650 MB daily. After the script was installed, the daily increase
