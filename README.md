@@ -14,18 +14,17 @@ lines of the script.
 
 ## Limit disk space for updating
 
-Add those lines before `seq=...` in `openstreetmap-tiles-update-expire` script:
+Add those lines before `seq=...` in `openstreetmap-tiles-update-expire` script
+(for some reason version with `stat` did not work):
 
 ```bash
-MIN_DISK_SPACE_MB=50000
+MIN_DISK_SPACE_MB=500
 
-if (( `stat -f --format="%a*%S" $BASE_DIR` < 1024*1024*$MIN_DISK_SPACE_MB )); then
+if `python -c "import os, sys; st=os.statvfs('$BASE_DIR'); sys.exit(1 if st.f_bavail*st.f_frsize/1024/1024 > $MIN_DISK_SPACE_MB else 0)"`; then
     m_info "there is less than $MIN_DISK_SPACE_MB MB left"
     exit 4
 fi
 ```
-
-*Note: it does not work for some unknown reason. Investigate.*
 
 ## trim_osc.py
 
