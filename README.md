@@ -4,6 +4,14 @@ It is hard to maintain OSM tile service with a small server: you can't have
 a properly updated regional extract or even run osm2pgsql on low memory.
 Here are some scripts that would help.
 
+## init-planet-region.sh
+
+Download planet.osm, cuts a polygon, updates it to today, loads it into
+the database with osm2pgsql, and then optionally creates an sql archive
+and uploads it to a remote server. On the second run does not use a planet
+file, instead updates an extract. See configuration options in first
+lines of the script.
+
 ## Limit disk space for updating
 
 Add those lines before `seq=...` in `openstreetmap-tiles-update-expire` script:
