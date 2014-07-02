@@ -45,4 +45,4 @@ fi
 
 On a 16.5 GB database without this script planet diffs amounted to
 600-650 MB daily. After the script was installed, the daily increase
-fell to ??? (*todo: fill this in*).
+fell to 100 MB.
