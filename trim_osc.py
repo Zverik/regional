@@ -8,18 +8,29 @@ from lxml import etree
 from shapely.geometry import Polygon, Point
 
 def poly_parse(fp):
+	result = None
 	poly = []
 	data = False
 	for l in fp:
 		l = l.strip()
-		if not l: continue
-		if l == 'END': break
-		if l == '1':
+		if l == 'END' and data:
+			if len(poly) > 0:
+				if hole and result:
+					result = result.difference(Polygon(poly))
+				elif not hole and result:
+					result = result.union(Polygon(poly))
+				elif not hole:
+					result = Polygon(poly)
+			poly = []
+			data = False
+		elif l == 'END' and not data:
+			break
+		elif len(l) > 0 and ' ' not in l and '\t' not in l:
 			data = True
-			continue
-		if not data: continue
-		poly.append(map(lambda x: float(x.strip()), l.split()[:2]))
-	return poly
+			hole = l[0] == '!'
+		elif l and data:
+			poly.append(map(lambda x: float(x.strip()), l.split()[:2]))
+	return result
 
 def box(x1,y1,x2,y2):
 	return Polygon([(x1,y1), (x2,y1), (x2,y2), (x1,y2)])
@@ -46,7 +57,7 @@ if options.bbox:
 	b = options.bbox
 	poly = box(b[0], b[1], b[2], b[3])
 if options.poly:
-	tpoly = Polygon(poly_parse(options.poly))
+	tpoly = poly_parse(options.poly)
 	poly = tpoly if not poly else poly.intersection(tpoly)
 
 if poly == None or not options.dbname:
