@@ -12,6 +12,27 @@ and uploads it to a remote server. On the second run does not use a planet
 file, instead updates an extract. See configuration options in first
 lines of the script.
 
+## load-osm.sh
+
+What if you don't want to update OSM data minutely, but prefer instead to have
+as much data as possible? Rent a separate hourly-priced droplet, log in as root
+and upload this script. Run `./load-osm.sh init`, enter a password for `osm`
+user when asked. Then log out.
+
+Log in to the droplet as `osm` user. Download a style file and an extract.
+And another copy of this script. Start a `screen`, inside it run
+`./load-osm.sh load <style> <extract>`. Ctrl+A, Ctrl+D, Ctrl+D to log out;
+in some hours log back in and type `screen -r` to resume screen session.
+
+When finished, run `./load-osm clean` to delete temporary "slim" tables.
+Then `./load-osm dump` would create a database dump, or, if every byte
+counts, use `./load-osm transmit user@ip` to send PostgreSQL dump directly
+to your server.
+
+You should put correct user name and database name in the `load-osm.sh` header.
+
+Linux builds supported: Fedora 19 and 20, Ubuntu 12.04 and 14.04, Debian 7.
+
 ## Limit disk space for updating
 
 Add those lines before `seq=...` in `openstreetmap-tiles-update-expire` script
