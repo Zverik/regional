@@ -79,13 +79,15 @@ init_all() {
 
 	init_user
 	init_pgsql
+	echo
+	echo "Now relogin as $USER and load your OSM extract with $0 load."
 }
 
 init_user() {
 	useradd -m -s /bin/bash $USER
 	cp $0 /home/$USER
 	mv *.{style,osm,pbf}* /home/$USER
-	echo "User account $USER has been created, you should use it for all operations."
+	chown $USER /home/$USER/*
 	passwd $USER
 }
 
