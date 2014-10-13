@@ -12,7 +12,7 @@ load() {
 		HSTORE_OPT=--hstore
 	fi
 	PROCS=$((`nproc`-1))
-	osm2pgsql -d $DATABASE --slim $HSTORE_OPT --multi-geometry --number-processes $PROCS $OSM2PGSQL_EXTRA_OPTIONS --style $1 $2
+	osm2pgsql -d $DATABASE --slim $DROP_OPT $HSTORE_OPT --multi-geometry --number-processes $PROCS $OSM2PGSQL_EXTRA_OPTIONS --style $1 $2
 }
 
 # Remove slim tables from postgresql database
@@ -77,13 +77,19 @@ init_all() {
 		exit 1
 	fi
 
+	init_user
 	init_pgsql
 }
 
-init_pgsql() {
+init_user() {
 	useradd -m -s /bin/bash $USER
+	cp $0 /home/$USER
+	mv *.{style,osm,pbf}* /home/$USER
 	echo "User account $USER has been created, you should use it for all operations."
 	passwd $USER
+}
+
+init_pgsql() {
 	if [ -n "$HSTORE" ]; then
 		HSTORE_CMD='CREATE EXTENSION hstore;'
 	fi
@@ -177,11 +183,14 @@ case $1 in
 		check_user root
 		init_all
 		;;
-	load)
+	load|loadc)
 		check_user
 		if [ ! -f "$2" -o ! -f "$3" ]; then
 			echo "Please specify valid files for both parameters"
 			exit 1
+		fi
+		if [ "$1" == "loadc" ]; then
+			DROP_OPT=--drop
 		fi
 		load "$2" "$3"
 		;;
@@ -205,6 +214,7 @@ case $1 in
 		echo ""
 		echo "Usage: $0 init - install PostgreSQL and osm2pgsql, initialize database"
 		echo "       $0 load <style> <file> - load OSM/PBF dump into the database"
+		echo "       $0 loadc <style> <file> - load with --drop (eq. to clean option, but slightly faster)"
 		echo "       $0 clean - drop slim tables (disables live updating)"
 		echo "       $0 dump [file] - create a gzipped database dump (defaults to db-YYMMDD-HHMM.sql.gz)"
 		echo "       $0 transmit user@ip - send database contents to a server via ssh, skipping dump step"
