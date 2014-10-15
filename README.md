@@ -16,18 +16,18 @@ lines of the script.
 
 What if you don't want to update OSM data minutely, but prefer instead to have
 as much data as possible? Rent a separate hourly-priced droplet, log in as root
-and upload this script. Run `./load-osm.sh init`, enter a password for `osm`
+and upload this script, a style files and an OSM extract. Run `./load-osm.sh init`, enter a password for `osm`
 user when asked. Then log out.
 
-Log in to the droplet as `osm` user. Download a style file and an extract.
-And another copy of this script. Start a `screen`, inside it run
-`./load-osm.sh load <style> <extract>`. Ctrl+A, Ctrl+D, Ctrl+D to log out;
-in some hours log back in and type `screen -r` to resume screen session.
+Log in to the droplet as `osm` user. Start a `screen`, inside it run
+`./load-osm.sh loadc <style> <extract>` (`load` if you need "slim" tables).
+Ctrl+A, Ctrl+D, Ctrl+D to log out; in some hours log back in and
+type `screen -r` to resume screen session.
 
-When finished, run `./load-osm clean` to delete temporary "slim" tables.
-Then `./load-osm dump` would create a database dump, or, if every byte
+When finished, run `./load-osm dump` to create a database dump, or, if every byte
 counts, use `./load-osm transmit user@ip` to send PostgreSQL dump directly
-to your server.
+to your server. After downloading the produces sql dump, the droplet can
+be destroyed.
 
 You should put correct user name and database name in the `load-osm.sh` header.
 
