@@ -67,3 +67,5 @@ fi
 On a 16.5 GB database without this script planet diffs amounted to
 600-650 MB daily. After the script was installed, the daily increase
 fell to 140 MB.
+
+This script needs `python-psycopg2` and `python-shapely` packages installed.
