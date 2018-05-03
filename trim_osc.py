@@ -9,8 +9,7 @@ import json
 import psycopg2
 import sys
 from lxml import etree
-from shapely import shape
-from shapely.geometry import Polygon, Point
+from shapely.geometry import shape, Polygon, Point
 
 
 def poly_parse(fp):
