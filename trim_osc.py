@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Trim osmChange file to a bounding polygon and database contents
 # Written by Ilya Zverev, licensed WTFPL
 
