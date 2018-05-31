@@ -58,7 +58,7 @@ def box(x1, y1, x2, y2):
 default_user = getpass.getuser()
 
 parser = argparse.ArgumentParser(description='Trim osmChange file to a polygon and a database data')
-parser.add_argument('osc', type=argparse.FileType('r'), help='input osc file, "-" for stdin')
+parser.add_argument('osc', type=argparse.FileType('rb'), help='input osc file, "-" for stdin')
 parser.add_argument('output', help='output osc file, "-" for stdout')
 parser.add_argument('-d', dest='dbname', help='database name')
 parser.add_argument('--host', help='database host')
@@ -115,7 +115,7 @@ for node in root.iter('node'):
         inside = poly.intersects(Point(float(node.get('lon')), float(node.get('lat'))))
         nodes[node.get('id')] = inside
         if node.getparent().tag == 'modify' and not inside:
-            nodesM.append(long(node.get('id')))
+            nodesM.append(int(node.get('id')))
 
 # Save modified nodes that are already in the database
 cur.execute('select id from planet_osm_nodes where id = ANY(%s);', (nodesM,))
