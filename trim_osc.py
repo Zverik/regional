@@ -151,8 +151,10 @@ cur.execute('select id from planet_osm_ways where id = ANY(%s);', (waysM,))
 for row in cur:
     ways.remove(row[0])
     # iterate over osmChange/<mode>/way[id=<id>]/nd and set nodes[ref] to True
-    for nd in root.xpath('//way[@id={}]/nd'.format(row[0])):
-        nodes[nd.get('ref')] = True
+    for wy in root.xpath('//way'):
+        if wy.attrib['id'] == row[0]:
+            for nd in wy.xpath('nd'):
+                nodes[nd.get('ref')] = True
 
 # RELATIONS
 
