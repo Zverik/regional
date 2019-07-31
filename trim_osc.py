@@ -194,7 +194,7 @@ for sec in root:
         root.remove(sec)
 
 # save modified osc
-of = sys.stdout if options.output == '-' else open(options.output, 'wb')
+of = sys.stdout.buffer if options.output == '-' else open(options.output, 'wb')
 if options.gzip:
     of = gzip.GzipFile(fileobj=of)
 of.write(etree.tostring(tree))
