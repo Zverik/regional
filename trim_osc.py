@@ -48,7 +48,7 @@ def poly_parse(fp):
             data = True
             hole = l[0] == '!'
         elif l and data:
-            poly.append(map(lambda x: float(x.strip()), l.split()[:2]))
+            poly.append(list(map(lambda x: float(x.strip()), l.split()[:2])))
     return result
 
 
