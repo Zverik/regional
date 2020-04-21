@@ -8,6 +8,7 @@ import gzip
 import json
 import psycopg2
 import sys
+import os
 from lxml import etree
 from shapely.geometry import shape, Polygon, Point
 
@@ -89,7 +90,7 @@ if poly is None or not options.dbname:
 # connect to database
 passwd = ""
 if options.password:
-    passwd = getpass.getpass("Please enter your password: ")
+    passwd = os.getenv('PGPASSWORD') or getpass.getpass("Please enter your password: ")
 
 try:
     db = psycopg2.connect(database=options.dbname, user=options.user, password=passwd,
