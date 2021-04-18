@@ -173,7 +173,7 @@ for rel in root.iter('relation'):
         relations.append(int(rel.get('id')))
 
 q3 = 'select id from {0}_rels where id = ANY(%s);'.format(prefix)
-cur.execute(q2, (relations,))
+cur.execute(q3, (relations,))
 for row in cur:
     relations.remove(row[0])
 
