@@ -208,5 +208,5 @@ for sec in root:
 # save modified osc
 of = sys.stdout.buffer if options.output == '-' else open(options.output, 'wb')
 if options.gzip:
-    of = gzip.GzipFile(fileobj=of)
+    of = gzip.GzipFile(fileobj=of, mode='w')
 of.write(etree.tostring(tree))
